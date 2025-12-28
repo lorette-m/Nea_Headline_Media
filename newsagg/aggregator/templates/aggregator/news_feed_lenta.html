@@ -1,0 +1,30 @@
+{% for item in lenta_news %}
+<article class="news-card"
+         hx-get="{% url 'news_detail_card' item.id %}"
+         hx-target="#modal-body"
+         hx-trigger="click"
+         data-bs-toggle="modal"
+         data-bs-target="#newsModal">
+
+  {% if item.media %}
+  <div class="media-indicator">
+    {% if item.media_type == 'image' %}
+      <span class="media-badge">📷</span>
+    {% elif item.media_type == 'video' %}
+      <span class="media-badge">🎥</span>
+    {% endif %}
+  </div>
+  {% endif %}
+  
+  <div class="title ">
+    <p>{{ item.title  }}</p>
+  </div>
+  <div class="meta">
+    <strong>{{ item.source.name }}</strong> • {{ item.published_date|date:"d M Y, H:i" }}
+  </div>
+</article>
+{% empty %}
+  <div class="text-center text-muted py-5">
+    <p>По вашему запросу новостей не найдено.</p>
+  </div>
+{% endfor %}

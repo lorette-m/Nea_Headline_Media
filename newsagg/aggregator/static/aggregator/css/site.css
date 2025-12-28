@@ -1,0 +1,360 @@
+/*
+ * Новый дизайн для "Νέα Хедлайн"
+ * Шрифт: Manrope
+ * Палитра: Природная, МАКСИМАЛЬНО СВЕТЛАЯ/БЕЛАЯ
+ */
+/* --- ОБЩИЕ СТИЛИ --- */
+/* --- БАЗА --- */
+body {
+  font-family: 'Manrope', sans-serif;
+  color: #3D4732;
+  min-height: 100vh;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- ФОН С ФОТО (замена градиента) --- */
+.gradient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/static/images/South-Caucasus.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  z-index: -1;
+  /* Лёгкий тёмный overlay для всей страницы (чтобы текст не сливался) */
+  /* background-color: rgba(0, 0, 0, 0.5); */ /* Прозрачность — подкорректируй под фото */
+  /*!* Fallback на старый градиент, если фото не загрузится *!*/
+  /*background: linear-gradient(135deg, rgba(220, 235, 255, 0.6), rgba(255, 240, 245, 0.6), rgba(245, 245, 255, 0.6)),*/
+  /*            url("/static/images/South-Caucasus.jpg");*/
+}
+
+/* --- ШАПКА И ЛОГОТИП --- */
+.site-header .logo {
+  font-weight: 700;
+  font-size: 2.2rem;
+  letter-spacing: -0.04em;
+  color: #556049;
+  position: relative;
+  display: inline-block;
+}
+
+.site-header .tagline {
+  font-size: 1rem;
+  color: #8D9981;
+  margin-top: 0.2rem;
+}
+
+/* --- ОСНОВНАЯ КОЛОНКА --- */
+.feed-container {
+  max-width: 680px;
+  margin: 1rem auto;
+  padding: 0 1rem 5rem;
+}
+
+/* --- ЛЕНТА И КАРТОЧКИ НОВОСТЕЙ --- */
+.news-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.news-card {
+  background: #FFFFFF; /* Чистый белый фон карточки */
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid #F0F0F0; /* Очень светлая серая граница */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03); /* Минимальная тень */
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+  cursor: pointer;
+  position: relative;
+}
+
+.news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05); /* Более заметная тень при наведении */
+  border-color: #E0E0E0;
+}
+
+.news-card .summary p {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: #3D4732;
+  margin: 0;
+  font-weight: 600;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.news-card .meta {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #8D9981;
+}
+
+.news-card .meta strong {
+  color: #556049;
+  font-weight: 600;
+}
+
+/* --- СТИЛИ ДЛЯ МЕДИА --- */
+.media-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.media-badge {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #F0F0F0;
+}
+
+.news-media {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.media-item {
+  margin-bottom: 1.5rem;
+}
+
+.news-image {
+  max-height: 400px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #F0F0F0;
+}
+
+.news-video {
+  max-height: 400px;
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #F0F0F0;
+  background: #000;
+}
+
+/* --- МОДАЛЬНОЕ ОКНО И ПОЛНЫЙ ТЕКСТ --- */
+.modal-content {
+  border-radius: 12px;
+  border: none;
+  background-color: #FFFFFF;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+  border-bottom: none;
+  padding: 1rem 1.5rem 0;
+}
+
+.modal-body {
+  padding: 0 2.5rem 2rem;
+}
+
+.news-full h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #3D4732;
+  margin-bottom: 0.75rem;
+  word-wrap: break-word;
+}
+
+.news-full .meta {
+  color: #8D9981;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.news-full .content {
+  line-height: 1.8;
+  font-size: 1.05rem;
+  color: #556049;
+}
+
+.read-more {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background-image: linear-gradient(100deg, #93A87D, #7E936B);
+  color: white;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(147, 168, 125, 0.4);
+}
+
+.read-more:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+  box-shadow: 0 7px 20px rgba(147, 168, 125, 0.5);
+}
+
+/* --- КАСТОМИЗАЦИЯ СКРОЛЛБАРА --- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #fcfcfc;
+}
+::-webkit-scrollbar-thumb {
+  background: #E5E5E5; /* Очень светлый серый */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #CCCCCC;
+}
+
+/*!* --- АДАПТИВНОСТЬ (Темная тема) --- *!*/
+/*@media (prefers-color-scheme: dark) {*/
+/*  !* Темный режим остается мягким *!*/
+/*  body {*/
+/*    color: #E8EEDF;*/
+/*    background-color: #1F251A;*/
+/*  }*/
+
+/*  .gradient-bg {*/
+/*    background: radial-gradient(circle at 30% 30%, #303B26 0%, rgba(31, 37, 26, 0) 60%);*/
+/*    opacity: 0.8;*/
+/*  }*/
+
+/*  .site-header .logo { color: #F7F7F0; }*/
+/*  .site-header .tagline { color: #A8B899; }*/
+
+/*  .news-card {*/
+/*    background: rgba(45, 55, 38, 0.7);*/
+/*    border-color: #405035;*/
+/*  }*/
+
+/*  .news-card:hover {*/
+/*    border-color: #607550;*/
+/*  }*/
+
+/*  .news-card .summary p { color: #F0F5E7; }*/
+/*  .news-card .meta { color: #A8B899; }*/
+/*  .news-card .meta strong { color: #C5D0BA; }*/
+
+/*  .modal-content {*/
+/*    background-color: #2D3524;*/
+/*    box-shadow: 0 10px 40px rgba(0,0,0,0.3);*/
+/*  }*/
+
+/*  .btn-close { filter: invert(1); }*/
+
+/*  .news-full h2 { color: #F7F7F0; }*/
+/*  .news-full .meta { color: #A8B899; }*/
+/*  .news-full .content { color: #D7E0C9; }*/
+/*}*/
+
+/*!* --- СТИЛИ ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ВКЛАДОК (SEGMENTED CONTROL) --- *!*/
+.segmented-control-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.segmented-control {
+  display: flex;
+  padding: 4px;
+  background-color: #F7F7F7; /* Очень светлый серый фон */
+  border-radius: 9px;
+  width: auto;
+  user-select: none;
+}
+
+.segmented-control a {
+  padding: 6px 20px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #666;
+  border-radius: 7px;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.segmented-control a.active {
+  background-color: #FFFFFF; /* Чистый белый активный элемент */
+  color: #3D4732;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* --- СТИЛИ ДЛЯ ВКЛАДОК И ФИЛЬТРА --- */
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+.filter-bar {
+  margin: 2rem auto 2.5rem; /* отступ сверху и снизу */
+  padding: 1rem 1.5rem;     /* внутренние отступы */
+  background-color: rgba(40, 40, 40, 0.6);
+  border-radius: 20px;      /* плавное скругление */
+  backdrop-filter: blur(1px); /* лёгкое размытие под фоном */
+  width: fit-content;       /* чтобы ширина подстраивалась под кнопки */
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15); /* мягкая тень */
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.filter-btn {
+  background-color: rgba(119, 136, 153, 0.29);
+  border: 1px solid #E0E0E0;
+  color: #aed59f;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: #D0D0D0;
+  background-color: #FAFAFA;
+}
+
+.filter-btn.active {
+  background-color: #93A87D; /* Акцентный цвет остается прежним */
+  border-color: #93A87D;
+  color: #fff;
+}
+
+.htmx-indicator {
+  display: none;
+}
+.htmx-request #lenta-feed .htmx-indicator {
+  display: block;
+}
+
+/* Показываем индикатор только во время HTMX-запроса */
+.htmx-indicator {
+  display: none;
+}
+
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: block;
+}
