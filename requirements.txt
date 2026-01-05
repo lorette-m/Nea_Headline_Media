@@ -7,3 +7,6 @@ feedparser==6.0.10
 Telethon==1.41.2
 schedule==1.2.2
 pillow==11.3.0
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
