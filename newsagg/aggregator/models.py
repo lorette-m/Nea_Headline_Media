@@ -37,6 +37,13 @@ class NewsItem(models.Model):
         ('video', 'Видео'),
         ('none', 'Без медиа')
     ], default="none", verbose_name="Тип медиа")
+    tags = models.ManyToManyField(
+        'Tag',
+        through='NewsItemTag',
+        related_name='news_items',
+        blank=True,
+        verbose_name="Теги"
+    )
 
     def __str__(self):
         return self.title[:100]
@@ -88,3 +95,34 @@ class MediaFile(models.Model):
     @property
     def is_video(self):
         return self.file_type == 'video'
+
+class Tag(models.Model):
+    """Теги новостей (создаются динамически)"""
+    name = models.CharField(max_length=100, unique=True, verbose_name="Название тега")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+        indexes = [
+            models.Index(fields=['name']),
+        ]
+
+
+class NewsItemTag(models.Model):
+    """Связь новости и тегов (many-to-many)"""
+    news = models.ForeignKey(NewsItem, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Связь новости и тега"
+        verbose_name_plural = "Связи новости и тегов"
+        unique_together = ('news', 'tag')
+        indexes = [
+            models.Index(fields=['news']),
+            models.Index(fields=['tag']),
+        ]
