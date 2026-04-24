@@ -18,5 +18,5 @@ soupsieve==2.8
 sqlparse==0.5.3
 Telethon==1.41.2
 typing_extensions==4.15.0
-tzdata==2025.2
+tzdata==2025.3
 urllib3==2.5.0
