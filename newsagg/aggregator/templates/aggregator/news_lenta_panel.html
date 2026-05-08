@@ -1,0 +1,80 @@
+<div class="filter-bar mb-3">
+  <form id="lenta-filters">
+    <input type="hidden" name="source" id="source-filter-input" value="{{ active_filter|default:'all' }}">
+    <input type="hidden" name="tags" id="selected-tags-input" value="{{ selected_tags|join:',' }}">
+
+    <div class="filter-buttons mb-3">
+      <button type="button"
+              class="filter-btn {% if active_filter == 'all' %}active{% endif %}"
+              data-source-value="all">
+        Все
+      </button>
+
+      {% for source in sources %}
+        <button type="button"
+                class="filter-btn {% if active_filter == source.id|stringformat:'s' %}active{% endif %}"
+                data-source-value="{{ source.id }}">
+          {{ source.name }}
+        </button>
+      {% endfor %}
+    </div>
+
+    {% if selected_tag_objects %}
+    <div class="selected-tags mb-3 d-flex flex-wrap gap-2">
+      {% for tag in selected_tag_objects %}
+        <button type="button"
+                class="filter-btn active"
+                data-tag-action="remove"
+                data-tag="{{ tag.name }}">
+          #{{ tag.name }} ×
+        </button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex gap-2 mb-2">
+      <input type="text"
+             name="q"
+             class="form-control"
+             placeholder="Начните вводить тег..."
+             autocomplete="off"
+             hx-get="{% url 'tag_suggest' %}"
+             hx-trigger="keyup changed delay:250ms"
+             hx-target="#tag-suggestions"
+             hx-swap="innerHTML"
+             hx-include="#selected-tags-input">
+
+      <button type="button"
+              class="filter-btn"
+              data-tag-action="clear">
+        Очистить
+      </button>
+    </div>
+
+    <div id="tag-suggestions" class="mb-3"></div>
+
+    <div class="tag-buttons d-flex flex-wrap gap-2 mb-2">
+      {% for tag in tags %}
+        <button type="button"
+                class="filter-btn {% if tag.name in selected_tags %}active{% endif %}"
+                data-tag-action="toggle"
+                data-tag="{{ tag.name }}">
+          #{{ tag.name }}
+        </button>
+      {% endfor %}
+    </div>
+  </form>
+</div>
+
+<div id="loading-indicator" class="htmx-indicator text-center py-3 text-muted">
+  Загрузка...
+</div>
+
+<div class="news-feed"
+     id="lenta-feed"
+     hx-get="{% url 'news_feed_lenta' %}"
+     hx-trigger="load, every 20s"
+     hx-swap="innerHTML"
+     hx-include="#source-filter-input, #selected-tags-input">
+  {% include "aggregator/news_feed_lenta.html" with lenta_news=lenta_news %}
+</div>

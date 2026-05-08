@@ -2,7 +2,7 @@ import abc
 import logging
 from typing import Dict, List, Optional
 
-from aggregator.models import NewsItem
+from aggregator.models import NewsItem, MediaFile
 
 logger = logging.getLogger(__name__)
 
@@ -26,24 +26,33 @@ class BaseParser(abc.ABC):
         return ' '.join(text.split())
 
     def save_news_item(self, news_data: Dict) -> Optional["NewsItem"]:
-
         try:
             if NewsItem.objects.filter(url=news_data["url"]).exists():
                 return None
 
             news_item = NewsItem.objects.create(
                 title=news_data["title"],
-                content=news_data["content"],
+                content=news_data.get("content", ""),
                 source=self.source,
                 url=news_data["url"],
                 published_date=news_data["published_date"],
-                summary=news_data.get('summary', ''),
-                media=news_data.get('media', False),
-                media_type=news_data.get('media_type', 'none')
+                summary=news_data.get("summary", ""),
+                media=news_data.get("media", False),
+                media_type=news_data.get("media_type", "none"),
             )
+
+            media_items = news_data.get("media_items", [])
+            for media in media_items:
+                MediaFile.objects.create(
+                    news=news_item,
+                    file_url=media.get("url", ""),
+                    file_type=media.get("type", "document"),
+                    file_size=0,
+                )
+
             logger.info(f"Новость сохранена: {news_data['title'][:100]}")
             return news_item
 
         except Exception as e:
-            logger.error(f'Ошибка сохранения новости: {e}')
+            logger.error(f"Ошибка сохранения новости: {e}")
             return None

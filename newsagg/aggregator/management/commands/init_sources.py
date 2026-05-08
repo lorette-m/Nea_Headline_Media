@@ -7,22 +7,20 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         rss_sources = [
-            {'name': 'РИА Новости', 'url': 'https://ria.ru/export/rss2/archive/index.xml'},
-            {'name': 'ТАСС', 'url': 'https://tass.ru/rss/v2.xml'},
-            {'name': 'РБК', 'url': 'https://rssexport.rbc.ru/rbcnews/news/30/full.rss'},
-            {'name': 'Интерфакс', 'url': 'https://www.interfax.ru/rss.asp'},
-            {'name': 'Лента.ру', 'url': 'https://lenta.ru/rss/news'},
-            {'name': 'BBC Russian', 'url': 'https://feeds.bbci.co.uk/russian/rss.xml'},
-            {'name': 'Reuters', 'url': 'https://feeds.reuters.com/reuters/UKTopNews'},
-            {'name': 'Meduza', 'url': 'https://meduza.io/rss/all'},
-            {'name': 'Фонтанка', 'url': 'https://www.fontanka.ru/fontanka.rss'},
-            {'name': 'Коммерсант', 'url': 'https://www.kommersant.ru/RSS/news.xml'},
-            {'name': 'Газета.Ru', 'url': 'https://www.gazeta.ru/export/rss/lenta.xml'},
-            {'name': 'RT', 'url': 'https://russian.rt.com/rss/'},
-            {'name': 'Ведомости', 'url': 'https://www.vedomosti.ru/rss/news.xml'},
-            {'name': 'Радио Свобода', 'url': 'https://www.svoboda.org/api/z-rqie$pp'},
-            {'name': 'Медиазона', 'url': 'https://zona.media/rss'},
-            {'name': 'Новая газета Европа', 'url': 'https://novayagazeta.eu/rss'},
+            {"name": "РИА Новости", "url": "https://ria.ru/export/rss2/archive/index.xml"},
+            {"name": "ТАСС", "url": "https://tass.ru/rss/v2.xml"},
+            {"name": "РБК", "url": "https://rssexport.rbc.ru/rbcnews/news/30/full.rss"},
+            {"name": "Интерфакс", "url": "https://www.interfax.ru/rss.asp"},
+            {"name": "Лента.ру", "url": "https://lenta.ru/rss/news"},
+            {"name": "BBC Russian", "url": "https://feeds.bbci.co.uk/russian/rss.xml"},
+            {"name": "Meduza", "url": "https://meduza.io/rss/all"},
+            {"name": "Фонтанка", "url": "https://www.fontanka.ru/rss-feeds/zen-news.xml"},
+            {"name": "Коммерсант", "url": "https://www.kommersant.ru/RSS/news.xml"},
+            {"name": "Газета.Ru", "url": "https://www.gazeta.ru/export/rss/first.xml"},
+            {"name": "RT", "url": "https://russian.rt.com/rss/"},
+            {"name": "Ведомости", "url": "https://www.vedomosti.ru/rss/news.xml"},
+            {"name": "Радио Свобода", "url": "https://www.svoboda.org/api/z-pqpil-vomx-tper-ipp"},
+            {"name": "Медиазона", "url": "https://zona.media/rss"},
         ]
 
         for source_data in rss_sources:

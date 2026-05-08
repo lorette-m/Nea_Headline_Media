@@ -16,14 +16,14 @@ class Command(BaseCommand):
         parser.add_argument(
             "--interval",
             type=int,
-            default=120,
-            help="Интервал парсинга: 120 минут"
+            default=1,
+            help="Интервал парсинга: 1 минут"
         )
         parser.add_argument(
             "--cleanup-days",
             type=int,
-            default=2,
-            help="Удалять новости старше 2 дней"
+            default=30,
+            help="Удалять новости старше 30 дней"
         )
 
     def handle(self, *args, **options):

@@ -1,0 +1,16 @@
+{% if tags %}
+  <div class="suggestion-box d-flex flex-wrap gap-2">
+    {% for tag in tags %}
+      <button type="button"
+              class="filter-btn"
+              data-tag-action="toggle"
+              data-tag="{{ tag.name }}">
+        #{{ tag.name }}
+      </button>
+    {% endfor %}
+  </div>
+{% elif query %}
+  <div class="text-muted small">
+    Ничего не найдено
+  </div>
+{% endif %}

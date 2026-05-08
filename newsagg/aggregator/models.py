@@ -2,7 +2,7 @@ from django.db import models
 
 
 class NewsSource(models.Model):
-    """Хранение новостей"""
+    """Хранение источников новостей"""
     SOURCE_TYPES = [
         ('telegram', 'Telegram'),
     ]
@@ -22,21 +22,96 @@ class NewsSource(models.Model):
 
 
 class NewsItem(models.Model):
-    """Хранение новостей"""
-    title = models.CharField(max_length=500, verbose_name="Заголовок")
-    content = models.TextField(verbose_name="Полный текст")
-    summary = models.TextField(blank=True, verbose_name="Краткое описание")
-    source = models.ForeignKey(NewsSource, on_delete=models.CASCADE, verbose_name="Источник")
-    url = models.URLField(unique=True, verbose_name="Ссылка на новость")
-    published_date = models.DateTimeField(verbose_name="Дата публикации")
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_processed = models.BooleanField(default=False, verbose_name="Обработано")
-    media = models.BooleanField(default=False, verbose_name="Медиа")
-    media_type = models.CharField(max_length=10, choices=[
+    """Хранение и обработка новостей"""
+
+    PROCESSING_STATUS = [
+        ('pending', 'Ожидает обработки'),
+        ('processing', 'Обрабатывается'),
+        ('processed', 'Обработано'),
+        ('failed', 'Ошибка обработки'),
+    ]
+
+    MEDIA_TYPES = [
         ('image', 'Изображение'),
         ('video', 'Видео'),
         ('none', 'Без медиа')
-    ], default="none", verbose_name="Тип медиа")
+    ]
+
+    title = models.CharField(
+        max_length=500,
+        verbose_name="Заголовок"
+    )
+
+    content = models.TextField(
+        verbose_name="Полный текст"
+    )
+
+    summary = models.TextField(
+        blank=True,
+        verbose_name="Краткое описание"
+    )
+
+    source = models.ForeignKey(
+        NewsSource,
+        on_delete=models.CASCADE,
+        verbose_name="Источник"
+    )
+
+    url = models.URLField(
+        unique=True,
+        verbose_name="Ссылка на новость"
+    )
+
+    published_date = models.DateTimeField(
+        verbose_name="Дата публикации"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата добавления"
+    )
+
+    is_processed = models.BooleanField(
+        default=False,
+        verbose_name="LLM обработка завершена"
+    )
+
+    processing_status = models.CharField(
+        max_length=20,
+        choices=PROCESSING_STATUS,
+        default='pending',
+        verbose_name="Статус обработки"
+    )
+
+    processing_error = models.TextField(
+        blank=True,
+        verbose_name="Ошибка обработки"
+    )
+
+    processing_started_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Начало обработки"
+    )
+
+    processed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Время завершения обработки"
+    )
+
+    media = models.BooleanField(
+        default=False,
+        verbose_name="Наличие медиа"
+    )
+
+    media_type = models.CharField(
+        max_length=10,
+        choices=MEDIA_TYPES,
+        default='none',
+        verbose_name="Тип медиа"
+    )
+
     tags = models.ManyToManyField(
         'Tag',
         through='NewsItemTag',
@@ -51,10 +126,14 @@ class NewsItem(models.Model):
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
+
         ordering = ['-published_date']
+
         indexes = [
             models.Index(fields=['published_date']),
             models.Index(fields=['source', 'published_date']),
+            models.Index(fields=['processing_status']),
+            models.Index(fields=['is_processed']),
         ]
 
 

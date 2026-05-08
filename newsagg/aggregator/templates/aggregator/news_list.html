@@ -14,69 +14,22 @@
 <div class="tabs-content">
 
   <div id="content-actual" class="tab-pane active">
-    <div class="news-feed">
-      {% for item in actual_news %}
-      <article class="news-card"
-               hx-get="{% url 'news_detail_card' item.id %}"
-               hx-target="#modal-body"
-               hx-trigger="click"
-               data-bs-toggle="modal"
-               data-bs-target="#newsModal">
 
-        {% if item.media %}
-        <div class="media-indicator">
-          {% if item.media_type == 'image' %}
-            <span class="media-badge"></span>
-          {% elif item.media_type == 'video' %}
-            <span class="media-badge"></span>
-          {% endif %}
-        </div>
-        {% endif %}
-        
-        <div class="title ">
-          <p>{{ item.title  }}</p>
-        </div>
-        <div class="meta">
-          <strong>{{ item.source.name }}</strong> • {{ item.published_date|date:"d M Y, H:i" }}
-        </div>
-      </article>
-      {% empty %}
-        <div class="text-center text-muted py-5">
-            <h4>Новостей пока нет</h4>
-        </div>
-      {% endfor %}
-    </div>
+  <div class="news-feed"
+       id="actual-feed"
+       hx-get="{% url 'news_feed_actual' %}"
+       hx-trigger="load, every 20s"
+       hx-swap="innerHTML">
+
+    {% include "aggregator/news_feed_actual.html" with actual_news=actual_news %}
+
   </div>
 
+</div>
+
   <div id="content-lenta" class="tab-pane">
-    <div class="filter-bar">
-      <div class="filter-buttons">
-        <button class="filter-btn {% if not active_filter %}active{% endif %}"
-            hx-get="{% url 'news_list' %}?source=all"
-            hx-target="#lenta-feed"
-            hx-swap="innerHTML"
-            hx-indicator="#loading-indicator">
-          Все
-        </button>
-        {% for source in sources %}
-            <button class="filter-btn {% if active_filter == source.id|stringformat:'s' %}active{% endif %}"
-                    hx-get="{% url 'news_list' %}?source={{ source.id }}"
-                    hx-target="#lenta-feed"
-                    hx-swap="innerHTML"
-                    hx-indicator="#loading-indicator">
-                {{ source.name }}
-            </button>
-        {% endfor %}
-      </div>
-    </div>
-
-    <!-- Индикатор СНАРУЖИ target'а -->
-    <div id="loading-indicator" class="htmx-indicator text-center py-3 text-muted">
-      Загрузка...
-    </div>
-
-    <div class="news-feed" id="lenta-feed">
-      {% include 'aggregator/news_feed_lenta.html' with lenta_news=lenta_news %}
+    <div id="lenta-panel">
+      {% include "aggregator/news_lenta_panel.html" %}
     </div>
   </div>
 
@@ -92,4 +45,59 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener("click", function (event) {
+  const tagButton = event.target.closest("[data-tag-action]");
+  const sourceButton = event.target.closest("[data-source-value]");
+
+  if (!tagButton && !sourceButton) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const sourceInput = document.getElementById("source-filter-input");
+  const tagsInput = document.getElementById("selected-tags-input");
+
+  const currentTags = new Set(
+    (tagsInput.value || "")
+      .split(",")
+      .map(t => t.trim())
+      .filter(Boolean)
+  );
+
+  if (tagButton) {
+    const tag = tagButton.dataset.tag;
+    const action = tagButton.dataset.tagAction;
+
+    if (action === "toggle") {
+      if (currentTags.has(tag)) {
+        currentTags.delete(tag);
+      } else {
+        currentTags.add(tag);
+      }
+    } else if (action === "remove") {
+      currentTags.delete(tag);
+    } else if (action === "clear") {
+      currentTags.clear();
+    }
+
+    tagsInput.value = Array.from(currentTags).join(",");
+  }
+
+  if (sourceButton) {
+    sourceInput.value = sourceButton.dataset.sourceValue;
+  }
+
+  htmx.ajax("GET", "{% url 'news_list' %}", {
+    target: "#lenta-panel",
+    swap: "innerHTML",
+    values: {
+      source: sourceInput.value || "all",
+      tags: tagsInput.value || ""
+    }
+  });
+});
+</script>
+
 {% endblock %}
