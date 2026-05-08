@@ -1,5 +1,4 @@
 import re
-from datetime import datetime
 from typing import List, Dict, Optional
 
 import feedparser
@@ -7,6 +6,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from django.utils import timezone
+from datetime import datetime, timezone as dt_timezone
 
 from .base_parser import BaseParser
 
@@ -228,11 +228,13 @@ class RSSParser(BaseParser):
         for field in date_fields:
             try:
                 value = getattr(entry, field, None)
+
                 if value:
-                    dt = datetime(*value[:6])
-                    if timezone.is_naive(dt):
-                        dt = timezone.make_aware(dt, timezone.get_current_timezone())
-                    return dt
+                    return datetime(
+                        *value[:6],
+                        tzinfo=dt_timezone.utc
+                    )
+
             except Exception:
                 continue
 
